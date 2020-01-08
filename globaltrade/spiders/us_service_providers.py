@@ -23,7 +23,7 @@ class UsServiceProvidersSpider(scrapy.Spider):
     def parse_details(self, response):
         logo = response.css('div.image img::attr(data-original)').get()
         title = response.css('h1.sp-title span::text').get()
-        sub_title = response.css('h1.sp-title span::text').get()
+        sub_title = response.css('h4 span.sub::text').get()
         primary_location = response.css('.profile-details [itemprop=addressLocality]::text').get()
         primary_location = primary_location.replace("\n", " ").replace("  ", " ").strip() if primary_location != None else None
         area_of_expertise = response.css('a.mainExp').get()
