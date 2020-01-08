@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 import scrapy
 from urllib.parse import urljoin
+from w3lib.html import remove_tags
 
 
 class UsServiceProvidersSpider(scrapy.Spider):
@@ -25,7 +26,10 @@ class UsServiceProvidersSpider(scrapy.Spider):
         title = response.css('h1.sp-title span::text').get()
         sub_title = response.css('h1.sp-title span::text').get()
         primary_location = response.css('.profile-details [itemprop=addressLocality]::text').get()
+        primary_location = primary_location.replace("\n", " ").replace("  ", " ").strip() if primary_location != None else None
         area_of_expertise = response.css('a.mainExp').get()
+        area_of_expertise = remove_tags(area_of_expertise) if area_of_expertise != None else None
+        
         scraped_info = {
             'logo_url':logo,
             'title':title,
