@@ -6,7 +6,7 @@ from w3lib.html import remove_tags
 class UsServiceProvidersSpider(scrapy.Spider):
     name = 'us_service_providers'
     allowed_domains = ['www.globaltrade.net']
-    start_urls = ['https://www.globaltrade.net/United-States/expert-service-provider.html?pageSize=10&orderBy=1&filterByPost=false&filterByRef=false&topicClear=false&industryClear=false&currentPage=%s'  % page for page in range(1,3)]
+    start_urls = ['https://www.globaltrade.net/United-States/expert-service-provider.html?pageSize=10&orderBy=1&filterByPost=false&filterByRef=false&topicClear=false&industryClear=false&currentPage=%s'  % page for page in range(1,413)]
     custom_settings = {
         'FEED_URI' : 'json/globaltrade_us.json',
         'FEED_FORMAT': 'json'
