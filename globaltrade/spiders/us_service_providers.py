@@ -7,6 +7,10 @@ class UsServiceProvidersSpider(scrapy.Spider):
     name = 'us_service_providers'
     allowed_domains = ['www.globaltrade.net']
     start_urls = ['https://www.globaltrade.net/United-States/expert-service-provider.html?pageSize=10&orderBy=1&filterByPost=false&filterByRef=false&topicClear=false&industryClear=false&currentPage=%s'  % page for page in range(1,3)]
+    custom_settings = {
+        'FEED_URI' : 'json/globaltrade_us.json',
+        'FEED_FORMAT': 'json'
+    }
 
     def parse(self, response):
         provider_urls = response.xpath('//li[@class="sp-id"]/p[@class="sp-name"]/a[@class="profileNavigator"]/@href').extract()
@@ -20,10 +24,13 @@ class UsServiceProvidersSpider(scrapy.Spider):
         logo = response.css('div.image img::attr(data-original)').get()
         title = response.css('h1.sp-title span::text').get()
         sub_title = response.css('h1.sp-title span::text').get()
-
+        primary_location = response.css('.profile-details [itemprop=addressLocality]::text').get()
+        area_of_expertise = response.css('a.mainExp').get()
         scraped_info = {
             'logo_url':logo,
             'title':title,
-            'sub_title':sub_title
+            'sub_title':sub_title,
+            'primary_location':primary_location,
+            'area_of_expertise':area_of_expertise
         }
         yield scraped_info 
