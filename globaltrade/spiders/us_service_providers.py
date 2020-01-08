@@ -3,7 +3,6 @@ import scrapy
 from urllib.parse import urljoin
 from w3lib.html import remove_tags
 
-
 class UsServiceProvidersSpider(scrapy.Spider):
     name = 'us_service_providers'
     allowed_domains = ['www.globaltrade.net']
@@ -29,14 +28,28 @@ class UsServiceProvidersSpider(scrapy.Spider):
         primary_location = primary_location.replace("\n", " ").replace("  ", " ").strip() if primary_location != None else None
         area_of_expertise = response.css('a.mainExp').get()
         area_of_expertise = remove_tags(area_of_expertise) if area_of_expertise != None else None
+        about = None
+        website = None
+        languages_spoken = None
         page_url = response.request.url
-        
+
+        for overview in response.css('div.profile-content div.details tr'):
+            if(overview.css('td:nth-child(1)::text').get() == "About:"):
+                about = remove_tags(overview.css('td:nth-child(2)').get()).replace("\n", " ").replace("  ", " ").strip()
+            if(overview.css('td:nth-child(1)::text').get() == "Website:"):
+                website = remove_tags(overview.css('td:nth-child(2)').get()).replace("\n", " ").replace("  ", " ").strip()
+            if(overview.css('td:nth-child(1)::text').get() == "Languages spoken:"):
+                languages_spoken = remove_tags(overview.css('td:nth-child(2)').get()).replace("\n", " ").replace("  ", " ").strip()
+
         scraped_info = {
             'logo_url':logo,
             'title':title,
             'sub_title':sub_title,
             'primary_location':primary_location,
             'area_of_expertise':area_of_expertise,
+            'about':about,
+            'website':website,
+            'languages_spoken':languages_spoken, 
             'page_url':page_url
         }
         yield scraped_info 
