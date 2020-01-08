@@ -15,9 +15,15 @@ class UsServiceProvidersSpider(scrapy.Spider):
             headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.108 Safari/537.36'}
             url = urljoin(response.url, new_page_url)
             yield scrapy.Request(url,headers=headers, callback=self.parse_details)
-        pass
 
     def parse_details(self, response):
+        logo = response.css('div.image img::attr(data-original)').get()
         title = response.css('h1.sp-title span::text').get()
-        print(title)
-        pass
+        sub_title = response.css('h1.sp-title span::text').get()
+
+        scraped_info = {
+            'logo_url':logo,
+            'title':title,
+            'sub_title':sub_title
+        }
+        yield scraped_info 
