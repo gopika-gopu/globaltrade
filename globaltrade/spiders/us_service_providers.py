@@ -29,12 +29,14 @@ class UsServiceProvidersSpider(scrapy.Spider):
         primary_location = primary_location.replace("\n", " ").replace("  ", " ").strip() if primary_location != None else None
         area_of_expertise = response.css('a.mainExp').get()
         area_of_expertise = remove_tags(area_of_expertise) if area_of_expertise != None else None
+        page_url = response.request.url
         
         scraped_info = {
             'logo_url':logo,
             'title':title,
             'sub_title':sub_title,
             'primary_location':primary_location,
-            'area_of_expertise':area_of_expertise
+            'area_of_expertise':area_of_expertise,
+            'page_url':page_url
         }
         yield scraped_info 
