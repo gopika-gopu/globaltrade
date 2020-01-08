@@ -12,6 +12,12 @@ class UsServiceProvidersSpider(scrapy.Spider):
         provider_urls = response.xpath('//li[@class="sp-id"]/p[@class="sp-name"]/a[@class="profileNavigator"]/@href').extract()
         for provider in provider_urls:
             new_page_url  = 'https://www.globaltrade.net' + provider
+            headers = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.108 Safari/537.36'}
             url = urljoin(response.url, new_page_url)
-            print(url)
+            yield scrapy.Request(url,headers=headers, callback=self.parse_details)
+        pass
+
+    def parse_details(self, response):
+        title = response.css('h1.sp-title span::text').get()
+        print(title)
         pass
